@@ -1,0 +1,27 @@
+load: # Configuration for a load test
+  http:
+    endpoint:
+      url: example.com
+        method: GET
+        data: none
+    endpoint:
+      url: example.com/api
+        method: POST
+        data: blah
+  sim:
+    users: 500 # Number of concurrent active sessions
+    requests: 2000 # Number of requests / minute
+
+stress: # Configuration for a stress test
+  http:
+    endpoint:
+      url: example.com
+        method: GET
+        data: none
+    endpoint:
+      url: example.com/api
+        method: POST
+        data: blah
+  sim:
+    users: 2000 # Number of concurrent active sessions
+    requests: 8000 # Number of requests / minute
