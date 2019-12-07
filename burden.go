@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
-	//"time"
+	"flag"
 )
 
 func main() {
-	fmt.Println("Hello, World!")
+	confPtr := flag.String("f", "config/order.yml", "Location of order.yml")
+	flag.Parse()
 
-	config := loadconf("config\\simple-order.yml") // TODO: change to cmd-line argument (-f order.yml)
+	config := loadconf(*confPtr)
 	
 	fmt.Printf("--- m:\n%v\n\n", config)
 
