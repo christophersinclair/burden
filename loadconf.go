@@ -8,6 +8,12 @@ import (
 type BurdenConfig struct {
 	Test struct {
 		users int
+		http struct {
+			endpoint struct {
+				url string
+				method string
+			}
+		}
 	}
 }
 

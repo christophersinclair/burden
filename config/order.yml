@@ -1,2 +1,6 @@
 load:
-    users: 5
+  http:
+      endpoint:
+        url: www.example.com
+        method: GET
+  users: 5
