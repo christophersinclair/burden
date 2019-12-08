@@ -4,3 +4,18 @@ load:
         url: www.example.com
         method: GET
   users: 5
+  requests: 10
+stress:
+  http:
+      endpoint:
+        url: www.example.com
+        method: GET
+  users: 5
+  requests: 10
+spike:
+  http:
+      endpoint:
+        url: www.example.com
+        method: GET
+  users: 5
+  requests: 10

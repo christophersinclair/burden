@@ -3,13 +3,37 @@ package main
 import (
 	"io/ioutil"
 	"gopkg.in/yaml.v2"
+	"fmt"
 )
 
 type BurdenConfig struct {
-	Test struct {
+	Load struct {
 		users int
-		http struct {
-			endpoint struct {
+		requests int
+		HTTP struct {
+			Endpoint struct {
+				url string
+				method string
+			}
+		}
+	}
+
+	Stress struct {
+		users int
+		requests int
+		HTTP struct {
+			Endpoint struct {
+				url string
+				method string
+			}
+		}
+	}
+
+	Spike struct {
+		users int
+		requests int
+		HTTP struct {
+			Endpoint struct {
 				url string
 				method string
 			}
@@ -33,6 +57,11 @@ func loadconf(filename string) map[interface{}]interface{} {
 
 	err = yaml.Unmarshal([]byte(conf), &m)
 	check(err)
+
+	cm := BurdenConfig{}
+	err = yaml.Unmarshal([]byte(conf), &cm)
+	check(err)
+	fmt.Printf("--- cm:\n%v\n\n", cm)
 
 	return m
 
