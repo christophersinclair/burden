@@ -3,34 +3,12 @@ package main
 import (
 	"fmt"
 	"os"
-	"log"
-	"net/http"
   "strconv"
   "time"
   "flag"
 )
 
-func loadtest(users int, endpoint string) string {
-
-	for i := 0; i < users; i++ {
-		go httpCall(endpoint)
-	}
-	return "Success"
-}
-
-func httpCall(endpoint string) {
-	response, err := http.Get(endpoint)
-    if err != nil {
-        fmt.Printf("The HTTP request failed with error %s\n", err)
-    } else {
-        respCode := strconv.Itoa(response.StatusCode)
-        fmt.Println("Status code for endpoint " + endpoint + ": " + respCode)
-	}
-}
-
-
-
-
+// Checks if command line flags were passed
 func isFlagPassed(name string) bool {
   found := false
   flag.Visit(func(f *flag.Flag) {
@@ -43,6 +21,7 @@ func isFlagPassed(name string) bool {
 }
 
 func main() {
+
   greeting := `
       ..-::::::-..          
   .:-::::::::::::::-:.
@@ -94,7 +73,11 @@ func main() {
     fmt.Println("--loadtime set to " + *loadTimePtr)
   }
 
+  response := loadTest(*loadUsersPtr, *httpEndpointPtr)
+
   // give time for the goroutines to kick off
   time.Sleep(3000 * time.Millisecond)
+
+  fmt.Println(response)
   
 }
