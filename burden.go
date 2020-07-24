@@ -6,8 +6,8 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"net/http"
-	//"io/ioutil"
-	"strconv"
+  "strconv"
+  "time"
 )
 
 // use godot package to load/read the .env file and
@@ -27,7 +27,7 @@ func goDotEnvVariable(key string) string {
 func loadtest(users int, endpoint string) string {
 
 	for i := 0; i < users; i++ {
-		httpCall(endpoint)
+		go httpCall(endpoint)
 	}
 	return "Success"
 }
@@ -38,9 +38,7 @@ func httpCall(endpoint string) {
         fmt.Printf("The HTTP request failed with error %s\n", err)
     } else {
         respCode := strconv.Itoa(response.StatusCode)
-        fmt.Println("Status code: " + respCode)
-        //data, _ := ioutil.ReadAll(response.Body)
-        //fmt.Println(string(data))
+        fmt.Println("Status code for endpoint " + endpoint + ": " + respCode)
 	}
 }
 
@@ -59,9 +57,6 @@ func main() {
       oO:::::::Oo`
 
   fmt.Println(greeting)
-  
-  // godotenv package
-  //dotenv := goDotEnvVariable("stress_time")
  
   load_users, err := strconv.Atoi(goDotEnvVariable("load_users"))
   if err != nil {
@@ -70,6 +65,9 @@ func main() {
   http_endpoint := goDotEnvVariable("http_endpoint")
 
   response := loadtest(load_users, http_endpoint)
+ 
+  // give time for the goroutines to kick off
+  time.Sleep(3000 * time.Millisecond)
 
   fmt.Println(response)
   
