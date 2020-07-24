@@ -3,26 +3,12 @@ package main
 import (
 	"fmt"
 	"os"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
   "strconv"
   "time"
+  "flag"
 )
-
-// use godot package to load/read the .env file and
-// return the value of the key
-func goDotEnvVariable(key string) string {
-
-  // load .env file
-  err := godotenv.Load(".env")
-
-  if err != nil {
-    log.Fatalf("Error loading .env file")
-  }
-
-  return os.Getenv(key)
-}
 
 func loadtest(users int, endpoint string) string {
 
@@ -42,6 +28,20 @@ func httpCall(endpoint string) {
 	}
 }
 
+
+
+
+func isFlagPassed(name string) bool {
+  found := false
+  flag.Visit(func(f *flag.Flag) {
+    if f.Name == name {
+      found = true
+    }
+  })
+
+  return found
+}
+
 func main() {
   greeting := `
       ..-::::::-..          
@@ -54,21 +54,47 @@ func main() {
    -::::::::::::::::-         /_.___/\__,_/_/   \__,_/\___/_/ /_/ 
    .::::::::::::::::.
     .::::::::::::::.
-      oO:::::::Oo`
+      oO:::::::Oo
+      
+  Welcome to burden! Author: @srechris
+  
+  You can get help by running 'burden --help'.
+      `
 
   fmt.Println(greeting)
  
-  load_users, err := strconv.Atoi(goDotEnvVariable("load_users"))
-  if err != nil {
-	  fmt.Printf("Failed to load user config with error %s\n", err)
-  }
-  http_endpoint := goDotEnvVariable("http_endpoint")
 
-  response := loadtest(load_users, http_endpoint)
- 
+  // Declare program flags
+  loadUsersPtr := flag.Int("loadusers", 10, "Number of users to simulate in a load test.")
+  loadTimePtr := flag.String("loadtime", "1m", "Duration of load test. Possible times include 5m, 10s, 1hr, etc.")
+  httpEndpointPtr := flag.String("httpendpoint", "", "HTTP endpoint to test. No default value.")
+
+
+  // Parse flags
+  flag.Parse()
+
+
+  if isFlagPassed("httpendpoint") == false {
+    fmt.Println("--httpendpoint not set!")
+    fmt.Fprintf(os.Stderr, "error: Please provide an endpoint to test using the --httpendpoint flag.")
+    os.Exit(1)
+  } else {
+    fmt.Println("--httpendpoint set to " + *httpEndpointPtr)
+  }
+
+  if isFlagPassed("loadusers") == false {
+    fmt.Println("--loadusers not set, using default value of " + strconv.Itoa(*loadUsersPtr))
+  } else {
+    fmt.Println("--loadusers set to " + strconv.Itoa(*loadUsersPtr))
+  }
+
+  if isFlagPassed("loadtime") == false {
+    fmt.Println("--loadtime not set, using default value of " + *loadTimePtr)
+  } else {
+    fmt.Println("--loadtime set to " + *loadTimePtr)
+  }
+
   // give time for the goroutines to kick off
   time.Sleep(3000 * time.Millisecond)
-
-  fmt.Println(response)
   
 }
