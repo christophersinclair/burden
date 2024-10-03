@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: burden
+spec:
+  replicas: REPLACE_ME
+  selector:
+    matchLabels:
+      app: burden
+  template:
+    metadata:
+      labels:
+        app:
+          burden
+    spec:
+      containers:
+        - name: burden
+          env:
+            - name: FIB
+              value: "40" # set higher for more intense calculation per thread
+            - name: MAX_THREADS
+              value: "1000" # set higher to spawn more parallel threads
+          image: path/to/container/repository/where/this/image/is
+          resources:
+            requests:
+              cpu: 0m
+              memory: 500Mi
+            limits:
+              cpu: 0m
+              memory: 500Mi
